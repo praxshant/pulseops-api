@@ -1,0 +1,174 @@
+{
+  "run_id": "c001ce48ba034457aed116727d3ac1ba",
+  "run_started_at": "2026-09-19T13:45:11.258420+00:00",
+  "run_finished_at": "2026-09-19T13:45:16.002739+00:00",
+  "duration_seconds": 4.744319,
+  "config": {
+    "experiment_name": "pulseops-discharge-forecast",
+    "model_type": "extra_trees",
+    "feature_set": "all_context",
+    "random_seed": 42,
+    "hyperparameters": {
+      "bootstrap": false,
+      "ccp_alpha": 0.0,
+      "criterion": "squared_error",
+      "max_depth": null,
+      "max_features": 1.0,
+      "max_leaf_nodes": null,
+      "max_samples": null,
+      "min_impurity_decrease": 0.0,
+      "min_samples_leaf": 2,
+      "min_samples_split": 2,
+      "min_weight_fraction_leaf": 0.0,
+      "monotonic_cst": null,
+      "n_estimators": 300,
+      "n_jobs": -1,
+      "oob_score": false,
+      "random_state": 42,
+      "verbose": 0,
+      "warm_start": false
+    }
+  },
+  "split": {
+    "train_start": "2026-04-01",
+    "train_end": "2026-06-30",
+    "validation_start": "2026-07-01",
+    "validation_end": "2026-07-31",
+    "test_start": "2026-08-01",
+    "test_end": "2026-08-31"
+  },
+  "features": [
+    "day_of_week",
+    "is_weekend",
+    "lag_1_discharge",
+    "lag_7_discharge",
+    "lag_14_discharge",
+    "lag_28_discharge",
+    "rolling_7d_discharge",
+    "rolling_14d_discharge",
+    "rolling_28d_discharge",
+    "previous_month_total_attendances",
+    "previous_month_emergency_admissions",
+    "previous_month_over_4_hours",
+    "ae_context_available",
+    "occupied_beds",
+    "available_beds",
+    "occupancy_rate",
+    "bed_context_available"
+  ],
+  "dataset": {
+    "dataset_path": "data\\processed\\forecasting_dataset.parquet",
+    "dataset_hash": "9eed502b65038be2eda91527714fa6d39191b6f859c285e9c8058b9ca1acaa00",
+    "schema_hash": "e904102d7b2c6a96c53ee152d12f2baf78b3152aa5662895fed5a5f79a88ebc9",
+    "row_count": 17958,
+    "column_count": 22,
+    "date_min": "2026-04-01",
+    "date_max": "2026-08-31",
+    "feature_columns": [
+      "Org Code",
+      "date",
+      "Org Name",
+      "daily_discharges",
+      "target_next_day",
+      "day_of_week",
+      "is_weekend",
+      "lag_1_discharge",
+      "lag_7_discharge",
+      "lag_14_discharge",
+      "lag_28_discharge",
+      "rolling_7d_discharge",
+      "rolling_14d_discharge",
+      "rolling_28d_discharge",
+      "occupied_beds",
+      "available_beds",
+      "occupancy_rate",
+      "bed_context_available",
+      "previous_month_total_attendances",
+      "previous_month_emergency_admissions",
+      "previous_month_over_4_hours",
+      "ae_context_available"
+    ]
+  },
+  "code": {
+    "git_commit": "d22f56f6ff17ac09f0195d5af7bb7a75bc7201d1",
+    "git_branch": "main",
+    "dirty_worktree": true
+  },
+  "environment": {
+    "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 16:37:03) [MSC v.1929 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "pandas": "2.2.3",
+    "numpy": "2.1.3",
+    "scikit_learn": "1.6.1"
+  },
+  "rows_seen": 10698,
+  "metrics": {
+    "train": {
+      "candidate": {
+        "mae": 3.6713686670277808,
+        "rmse": 6.6593191487080485,
+        "wape": 0.04657431009441815,
+        "rows": 10698
+      },
+      "previous_day": {
+        "mae": 20.79454103570761,
+        "rmse": 29.150963109561122,
+        "wape": 0.26379573676870977,
+        "rows": 10698
+      },
+      "previous_weekday": {
+        "mae": 21.985577899654682,
+        "rmse": 31.318370667314927,
+        "wape": 0.2759650234379681,
+        "rows": 9846
+      }
+    },
+    "validation": {
+      "candidate": {
+        "mae": 9.766641519507187,
+        "rmse": 14.118357686024964,
+        "wape": 0.12161819071460597,
+        "rows": 3627
+      },
+      "previous_day": {
+        "mae": 20.680452164323132,
+        "rmse": 29.09493128007773,
+        "wape": 0.25752139774572647,
+        "rows": 3627
+      },
+      "previous_weekday": {
+        "mae": 22.163817663817664,
+        "rmse": 30.711076632385065,
+        "wape": 0.2764705098418988,
+        "rows": 2808
+      }
+    },
+    "test": {
+      "candidate": {
+        "mae": 10.299261427449446,
+        "rmse": 15.623329632858495,
+        "wape": 0.1344466091584353,
+        "rows": 3510
+      },
+      "previous_day": {
+        "mae": 20.58233618233618,
+        "rmse": 29.151651812869943,
+        "wape": 0.2686819174138938,
+        "rows": 3510
+      },
+      "previous_weekday": {
+        "mae": 21.42846525455221,
+        "rmse": 30.982367529502724,
+        "wape": 0.2809342388603611,
+        "rows": 2691
+      }
+    }
+  },
+  "quality_gate": {
+    "passed": true,
+    "reason": "Passed all quality checks."
+  },
+  "is_registered": true,
+  "model_artifact": "artifacts\\runs\\c001ce48ba034457aed116727d3ac1ba\\model.joblib",
+  "events_artifact": "artifacts\\runs\\c001ce48ba034457aed116727d3ac1ba\\events.jsonl"
+}

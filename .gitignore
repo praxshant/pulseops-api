@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+artifacts/inference/
+.DS_Store
