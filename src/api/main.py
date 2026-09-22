@@ -40,6 +40,22 @@ _INFERENCE_LOG_DIR = Path("artifacts/inference")
 _ACTUALS_PATH = Path("data/processed/forecasting_dataset.parquet")
 
 
+def _release_freed_memory() -> None:
+    """Return memory freed after deserialization back to the OS (glibc only).
+
+    joblib rebuilding the tree ensemble briefly allocates far more than the
+    model's steady-state footprint. On glibc that freed memory is retained by
+    the allocator, keeping RSS near the load spike; malloc_trim hands it back
+    so the container stays well under tight memory limits. No-op off glibc.
+    """
+    try:
+        import ctypes
+
+        ctypes.CDLL("libc.so.6").malloc_trim(0)
+    except (OSError, AttributeError):
+        pass
+
+
 def _load_model() -> tuple[Any, str, str]:
     """Load the latest registered model from disk or return cached instance."""
     if "model" in _MODEL_CACHE:
@@ -59,6 +75,7 @@ def _load_model() -> tuple[Any, str, str]:
             model_path = Path(run_json_path).parent / "model.joblib"
             if model_path.exists():
                 model = joblib.load(model_path)
+                _release_freed_memory()
                 run_id = meta["run_id"]
                 version = run_id[:8]
                 _MODEL_CACHE.update({"model": model, "version": version, "run_id": run_id})
@@ -68,6 +85,21 @@ def _load_model() -> tuple[Any, str, str]:
         "No quality-gate-passing model found in artifacts/runs/. "
         "Run python -m models.train first."
     )
+
+
+@app.on_event("startup")
+def _preload_model() -> None:
+    """Load the model once at boot so the memory spike happens before traffic.
+
+    If the container survives startup it has proven it fits in memory; a
+    request-time load could otherwise spike an already-busy process over the
+    limit. Failures here surface immediately in the deploy logs.
+    """
+    try:
+        _load_model()
+    except RuntimeError:
+        # No model yet — surfaced per-request as a 503; don't block startup.
+        pass
 
 
 # --------------------------------------------------------------------------- #

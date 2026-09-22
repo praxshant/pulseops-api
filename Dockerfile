@@ -2,6 +2,9 @@ FROM python:3.11-slim
 
 WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PYTHONPATH=/app/src
+# Cap glibc per-thread malloc arenas: numpy/sklearn spawn threads, and the
+# default (8 x CPU) arenas fragment RSS badly on small-memory containers.
+ENV MALLOC_ARENA_MAX=2
 
 COPY pyproject.toml README.md ./
 COPY src ./src
